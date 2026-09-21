@@ -5,6 +5,7 @@ import {book,emit} from '../../features/ledger/index.js';
 import {transfer} from '../../features/wallet/index.js';
 import {securityAt,searchable} from '../../features/securities/index.js';
 import {assertInvariants} from '../../features/settlement/index.js';
+import {submitOrder,cancelOrder} from '../../features/orders/index.js';
 export class GameKernel {
  private tail:Promise<unknown>=Promise.resolve();
  private constructor(private state:RunState,private readonly data:HistoricalData,private readonly store:RunStore){}
@@ -32,6 +33,8 @@ export class GameKernel {
   }
   const a=s.accounts[c.accountId];if(!a)throw new KernelError('ACCOUNT_NOT_FOUND');if(a.actorId!==c.actorId)throw new KernelError('NOT_OWNER');
   switch(c.type){
+   case 'SubmitOrder':return submitOrder(s,this.data.pack,c);
+   case 'CancelOrder':cancelOrder(s,a.accountId,c.orderId);return;
    case 'TransferCash':{const b=s.accounts[c.toAccountId];if(!b)throw new KernelError('ACCOUNT_NOT_FOUND');if(a===b)throw new KernelError('INVALID_COMMAND');const amount=BigInt(c.amountFen);if(a.availableCashFen<amount)throw new KernelError('INSUFFICIENT_CASH');const beforeB={availableCashFen:b.availableCashFen,frozenCashFen:b.frozenCashFen};book(s,a,'CashTransferredOut',c.commandId,()=>transfer(a,b,amount),0n,0n,-amount);const afterB=b.availableCashFen;b.availableCashFen=beforeB.availableCashFen;book(s,b,'CashTransferredIn',c.commandId,()=>{b.availableCashFen=afterB;},0n,0n,amount);return;}
    case 'AddWatchlist':securityAt(this.data.pack,c.securityId,s.gameTime);if(!a.watchlist.includes(c.securityId))a.watchlist.push(c.securityId);emit(s,'WatchlistAdded',a.accountId,c.securityId);return;
    case 'RemoveWatchlist':a.watchlist=a.watchlist.filter(id=>id!==c.securityId);emit(s,'WatchlistRemoved',a.accountId,c.securityId);return;
