@@ -6,6 +6,6 @@ Node24.14.0、pnpm10.9.0、TypeScript严格、better-sqlite3实际持久化。�
 
 BaoStock0.9.4已取得5股16交易日3840根真实5分钟数据；公开仓库只保留代码、合成夹具和小型统计证据。真实包 `.runtime/scenarios/baostock-five-v2` 不入Git，规则为game-test。公司行为公告审计、长历史与数据使用/再分发权限仍有缺口。
 
-用户明确授权本地提交并自动推送main；本轮开发分支feat/kernel-foundation将在验证后快进main并推送，不强推。最终Git哈希见任务回复或git log。继续前先读K10和docs/data/blockers.md。
+用户明确授权本地提交并自动推送main；开发分支已快进本地main。首次HTTPS推送因凭据缺workflow权限被GitHub拒绝；已有GitHub连接器成功提交同一CI配置后，合并这个本轮创建的远端初始化提交，再普通推送成功，没有强推。程序树与验证时一致。发布核验时main为f08bef9b7d3be10d983902678eb8a508a25d3a78，本记录随后另有文档提交。最终哈希见任务回复或git log。继续前先读K10和docs/data/blockers.md。
 
 下一阶段仅建议接简单交易调试界面；本轮没有实现前端、办公室、股吧或小游戏。

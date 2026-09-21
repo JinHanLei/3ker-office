@@ -59,4 +59,4 @@ resume pid=12044 SHA-256=345585c9c4cd7d48bdbde9fef350aa9a60cb3e8245851b778370ee7
 
 真实演示输出 `.runtime/real-8fdac9d9-33ca-436b-9c05-2b56c521671b`。原始manifest SHA-256：dbb24bc55622885990fe2f6362359dbebe4b702baa64e025fecfd4775a0ac61d；发布包hash：05d23e4f12f295c416587257ad4ca8f28eaa0a8af4ec536159a9410678ff4a91。未宣称全功能真实历史验证。
 
-GitHub Actions已配置Windows/Linux，未观察远端结果，不记为CI通过。最终推送和提交以任务最终回复为准。
+GitHub Actions已配置Windows/Linux，未观察远端结果，不记为CI通过。首次HTTPS推送缺workflow权限被拒绝；通过现有GitHub连接器写入同一CI文件，合并该远端初始化提交后普通推送成功。发布时本地/远端main一致为f08bef9b7d3be10d983902678eb8a508a25d3a78，程序树与已验证K10提交完全一致；随后只补本文档记录，最终哈希以任务回复为准。
