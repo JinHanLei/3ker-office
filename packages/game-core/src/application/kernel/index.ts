@@ -6,6 +6,8 @@ import {transfer} from '../../features/wallet/index.js';
 import {securityAt,searchable} from '../../features/securities/index.js';
 import {assertInvariants} from '../../features/settlement/index.js';
 import {submitOrder,cancelOrder} from '../../features/orders/index.js';
+import {schedule} from '../../features/scheduler/index.js';
+import {processBatch} from '../event-processing/index.js';
 export class GameKernel {
  private tail:Promise<unknown>=Promise.resolve();
  private constructor(private state:RunState,private readonly data:HistoricalData,private readonly store:RunStore){}
@@ -43,6 +45,17 @@ export class GameKernel {
  }
  query(q:GameQuery):unknown {const s=this.state;if(q.type==='status')return {runId:s.runId,gameTime:s.gameTime,status:s.status,eventSeq:s.eventSeq,marketDataKind:this.data.pack.manifest.marketDataKind,rulesetKind:this.data.pack.manifest.rulesetKind};if(q.type==='search')return clone(searchable(this.data.pack,s.gameTime,q.text));if(q.type==='bars')return clone(this.data.pack.bars.filter(b=>b.securityId===q.securityId&&ms(b.availableAt)<=s.gameTime));const a=s.accounts[q.accountId];if(!a)throw new KernelError('ACCOUNT_NOT_FOUND');if(a.actorId!==q.actorId)throw new KernelError('NOT_OWNER');return clone(q.type==='account'?a:q.type==='positions'?a.lots:q.type==='watchlist'?a.watchlist:q.type==='ledger'?s.ledger.filter(l=>l.accountId===a.accountId):s.orders.filter(o=>o.accountId===a.accountId));}
  exportSnapshot(actorId:string):RunState {if(actorId!==this.state.ownerActorId)throw new KernelError('NOT_OWNER');return clone(this.state);}
+ advanceTo(target:number|string):Promise<{ok:boolean;gameTime:number;code?:string}>{return this.serial(()=>this.advance(typeof target==='string'?ms(target):target));}
+ stepNextEvent():Promise<{ok:boolean;gameTime:number;code?:string}>{return this.serial(()=>this.advance(schedule(this.data.pack).find(t=>t>this.state.gameTime)??ms(this.data.pack.manifest.end)));}
+ private async advance(target:number):Promise<{ok:boolean;gameTime:number;code?:string}>{
+  if(!Number.isSafeInteger(target)||target<this.state.gameTime)throw new KernelError('INVALID_COMMAND','Cannot rewind');
+  const end=ms(this.data.pack.manifest.end),until=Math.min(target,end);
+  for(const time of schedule(this.data.pack).filter(t=>this.state.gameTime<t&&t<=until)){
+   const draft=clone(this.state);try{processBatch(draft,this.data.pack,time);}catch(error){if(error instanceof KernelError)return {ok:false,code:error.code,gameTime:this.state.gameTime};throw error;}await this.commit(draft);
+  }
+  if(this.state.gameTime<until){const draft=clone(this.state);draft.gameTime=until;await this.commit(draft);}
+  return {ok:true,gameTime:this.state.gameTime,...(this.state.status==='SCENARIO_COMPLETE'?{code:'SCENARIO_COMPLETE'}:{})};
+ }
  checkpoint():Promise<{stateVersion:number}>{return this.serial(async()=>({stateVersion:this.state.stateVersion}));}
  async close():Promise<void>{await this.tail;await this.store.close();}
 }
