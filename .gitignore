@@ -1,0 +1,14 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.runtime/
+.venv-data/
+.env
+.env.*
+!.env.example
+*.sqlite*
+*.db*
+coverage/
+__pycache__/
+scenarios/real/*/
+third-party/
