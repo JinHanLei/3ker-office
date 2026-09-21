@@ -1,0 +1,15 @@
+{
+  "scenarioId": "corporate-actions",
+  "scenarioVersion": "1",
+  "synthetic": true,
+  "marketDataKind": "synthetic",
+  "rulesetKind": "game-test",
+  "ruleVersion": "synthetic-basic-v1",
+  "start": "2020-01-02T09:00:00+08:00",
+  "end": "2020-01-07T15:00:00+08:00",
+  "coverageStatus": "COMPLETE",
+  "gaps": [],
+  "source": "hand-authored synthetic fixture",
+  "usage": "game tests only",
+  "redistribution": "project-authored synthetic"
+}

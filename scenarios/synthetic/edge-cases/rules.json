@@ -1,0 +1,22 @@
+[
+  {
+    "id": "synthetic-basic",
+    "from": "2020-01-02T09:00:00+08:00",
+    "to": "2021-01-01T00:00:00+08:00",
+    "board": "TEST",
+    "priceTickUnits": "100",
+    "quantityStep": "100",
+    "minimumBuyQuantity": "100",
+    "oddLotSellPolicy": "all-remainder",
+    "sellableDelayTradingDays": 1,
+    "commissionNumerator": "3",
+    "commissionDenominator": "10000",
+    "minimumCommissionFen": "500",
+    "stampNumerator": "1",
+    "stampDenominator": "1000",
+    "capacityNumerator": "1",
+    "capacityDenominator": "20",
+    "requiredPermission": "TEST",
+    "boardAvailableAt": "2020-01-02T09:00:00+08:00"
+  }
+]
