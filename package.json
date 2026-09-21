@@ -1,12 +1,17 @@
 {
-  "name": "3ker-office", "version": "0.1.0", "private": true,
-  "type": "module", "packageManager": "pnpm@10.9.0",
-  "engines": {"node": ">=24 <25"},
+  "name": "3ker-office",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.9.0",
+  "engines": {
+    "node": ">=24 <25"
+  },
   "scripts": {
     "typecheck": "tsc -b --pretty false",
     "build": "tsc -b --pretty false",
     "lint": "node scripts/architecture/check.mjs",
-    "test:unit": "vitest run packages scripts/data/__tests__",
+    "test:unit": "vitest run packages scripts/data/__tests__ apps/headless/src",
     "test:integration": "vitest run tests/integration tests/properties",
     "test:recovery": "vitest run tests/recovery",
     "test:acceptance": "vitest run tests/acceptance tests/e2e",
@@ -23,8 +28,17 @@
     "verify:data": "tsx scripts/data/build-scenario.ts verify"
   },
   "devDependencies": {
-    "typescript": "5.9.3", "vitest": "3.2.4", "tsx": "4.20.6",
-    "@types/node": "24.10.1", "@types/better-sqlite3": "7.6.13"
+    "@types/better-sqlite3": "7.6.13",
+    "@types/node": "24.10.1",
+    "prettier": "3.6.2",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3",
+    "vitest": "3.2.4"
   },
-  "pnpm": { "onlyBuiltDependencies": ["better-sqlite3", "esbuild"] }
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "better-sqlite3",
+      "esbuild"
+    ]
+  }
 }

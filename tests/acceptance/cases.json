@@ -1,0 +1,462 @@
+[
+  {
+    "id": "A01",
+    "status": "PASS",
+    "testFile": "tests/e2e/cli.test.ts",
+    "testName": "A03 F01 F03"
+  },
+  {
+    "id": "A02",
+    "status": "PASS",
+    "testFile": "tests/acceptance/engineering.test.ts",
+    "testName": "A02 architecture"
+  },
+  {
+    "id": "A03",
+    "status": "PASS",
+    "testFile": "tests/e2e/cli.test.ts",
+    "testName": "A03 F01 F03"
+  },
+  {
+    "id": "A04",
+    "status": "PASS",
+    "testFile": "tests/e2e/cli.test.ts",
+    "testName": "CLI create buy step"
+  },
+  {
+    "id": "A05",
+    "status": "PASS",
+    "testFile": "tests/acceptance/engineering.test.ts",
+    "testName": "A05 runtime"
+  },
+  {
+    "id": "B01",
+    "status": "PASS",
+    "testFile": "tests/integration/clock.test.ts",
+    "testName": "B01 B02 B03"
+  },
+  {
+    "id": "B02",
+    "status": "PASS",
+    "testFile": "tests/integration/clock.test.ts",
+    "testName": "B01 B02 B03"
+  },
+  {
+    "id": "B03",
+    "status": "PASS",
+    "testFile": "tests/integration/clock.test.ts",
+    "testName": "B01 B02 B03"
+  },
+  {
+    "id": "B04",
+    "status": "PASS",
+    "testFile": "tests/acceptance/market.test.ts",
+    "testName": "B04 lunch"
+  },
+  {
+    "id": "B05",
+    "status": "PASS",
+    "testFile": "tests/acceptance/market.test.ts",
+    "testName": "B05 B06 B07 B08"
+  },
+  {
+    "id": "B06",
+    "status": "PASS",
+    "testFile": "tests/acceptance/market.test.ts",
+    "testName": "B05 B06 B07 B08"
+  },
+  {
+    "id": "B07",
+    "status": "PASS",
+    "testFile": "tests/acceptance/market.test.ts",
+    "testName": "B05 B06 B07 B08"
+  },
+  {
+    "id": "B08",
+    "status": "PASS",
+    "testFile": "tests/acceptance/market.test.ts",
+    "testName": "B05 B06 B07 B08"
+  },
+  {
+    "id": "B09",
+    "status": "PASS",
+    "testFile": "packages/kernel-adapters/src/data/scenario.test.ts",
+    "testName": "B09 validates"
+  },
+  {
+    "id": "B10",
+    "status": "PASS",
+    "testFile": "tests/acceptance/market.test.ts",
+    "testName": "B10 suspension"
+  },
+  {
+    "id": "B11",
+    "status": "PASS",
+    "testFile": "tests/integration/clock.test.ts",
+    "testName": "B10 missing"
+  },
+  {
+    "id": "B12",
+    "status": "PASS",
+    "testFile": "tests/integration/clock.test.ts",
+    "testName": "B12 tick"
+  },
+  {
+    "id": "C01",
+    "status": "PASS",
+    "testFile": "tests/integration/clock.test.ts",
+    "testName": "C01 B04"
+  },
+  {
+    "id": "C02",
+    "status": "PASS",
+    "testFile": "tests/acceptance/market.test.ts",
+    "testName": "C02 C03"
+  },
+  {
+    "id": "C03",
+    "status": "PASS",
+    "testFile": "tests/acceptance/market.test.ts",
+    "testName": "C02 C03"
+  },
+  {
+    "id": "C04",
+    "status": "PASS",
+    "testFile": "tests/acceptance/market.test.ts",
+    "testName": "C04 C05"
+  },
+  {
+    "id": "C05",
+    "status": "PASS",
+    "testFile": "tests/acceptance/market.test.ts",
+    "testName": "C04 C05"
+  },
+  {
+    "id": "C06",
+    "status": "PASS",
+    "testFile": "tests/acceptance/market.test.ts",
+    "testName": "C06 C10"
+  },
+  {
+    "id": "C07",
+    "status": "PASS",
+    "testFile": "tests/acceptance/market.test.ts",
+    "testName": "C07 upper"
+  },
+  {
+    "id": "C08",
+    "status": "PASS",
+    "testFile": "tests/acceptance/market.test.ts",
+    "testName": "C08 capacity"
+  },
+  {
+    "id": "C09",
+    "status": "PASS",
+    "testFile": "packages/game-core/src/features/execution/execution.test.ts",
+    "testName": "K05 controlled"
+  },
+  {
+    "id": "C10",
+    "status": "PASS",
+    "testFile": "tests/acceptance/market.test.ts",
+    "testName": "C06 C10"
+  },
+  {
+    "id": "C11",
+    "status": "PASS",
+    "testFile": "tests/acceptance/market.test.ts",
+    "testName": "C11 frozen"
+  },
+  {
+    "id": "C12",
+    "status": "PASS",
+    "testFile": "tests/integration/wallet.test.ts",
+    "testName": "C11 C12 C13"
+  },
+  {
+    "id": "C13",
+    "status": "PASS",
+    "testFile": "packages/game-core/src/foundation/foundation.test.ts",
+    "testName": "K02 exact"
+  },
+  {
+    "id": "C14",
+    "status": "PASS",
+    "testFile": "tests/acceptance/market.test.ts",
+    "testName": "C14 minimum"
+  },
+  {
+    "id": "C15",
+    "status": "PASS",
+    "testFile": "tests/acceptance/market.test.ts",
+    "testName": "C15 two"
+  },
+  {
+    "id": "D01",
+    "status": "PASS",
+    "testFile": "tests/acceptance/corporate.test.ts",
+    "testName": "D01 record"
+  },
+  {
+    "id": "D02",
+    "status": "PASS",
+    "testFile": "tests/integration/corporate.test.ts",
+    "testName": "D02 D03 D09"
+  },
+  {
+    "id": "D03",
+    "status": "PASS",
+    "testFile": "tests/acceptance/corporate.test.ts",
+    "testName": "D03 D05"
+  },
+  {
+    "id": "D04",
+    "status": "PASS",
+    "testFile": "tests/acceptance/corporate.test.ts",
+    "testName": "D04 shares"
+  },
+  {
+    "id": "D05",
+    "status": "PASS",
+    "testFile": "tests/acceptance/corporate.test.ts",
+    "testName": "D03 D05"
+  },
+  {
+    "id": "D06",
+    "status": "PASS",
+    "testFile": "tests/integration/corporate.test.ts",
+    "testName": "D06 unsupported"
+  },
+  {
+    "id": "D07",
+    "status": "PASS",
+    "testFile": "tests/acceptance/corporate.test.ts",
+    "testName": "D07 D08"
+  },
+  {
+    "id": "D08",
+    "status": "PASS",
+    "testFile": "tests/acceptance/corporate.test.ts",
+    "testName": "D07 D08"
+  },
+  {
+    "id": "D09",
+    "status": "PASS",
+    "testFile": "tests/integration/corporate.test.ts",
+    "testName": "D02 D03 D09"
+  },
+  {
+    "id": "D10",
+    "status": "PASS",
+    "testFile": "tests/acceptance/corporate.test.ts",
+    "testName": "D10 unknown"
+  },
+  {
+    "id": "E01",
+    "status": "PASS",
+    "testFile": "tests/recovery/store.test.ts",
+    "testName": "E01 RunStore contract sqlite"
+  },
+  {
+    "id": "E02",
+    "status": "PASS",
+    "testFile": "tests/recovery/process.test.ts",
+    "testName": "E02 E03 E04 E05 E10 F02"
+  },
+  {
+    "id": "E03",
+    "status": "PASS",
+    "testFile": "tests/recovery/process.test.ts",
+    "testName": "E02 E03 E04 E05 E10 F02"
+  },
+  {
+    "id": "E04",
+    "status": "PASS",
+    "testFile": "tests/recovery/process.test.ts",
+    "testName": "E02 E03 E04 E05 E10 F02"
+  },
+  {
+    "id": "E05",
+    "status": "PASS",
+    "testFile": "tests/recovery/process.test.ts",
+    "testName": "E02 E03 E04 E05 E10 F02"
+  },
+  {
+    "id": "E06",
+    "status": "PASS",
+    "testFile": "tests/recovery/store.test.ts",
+    "testName": "E06 E07 fault afterRows"
+  },
+  {
+    "id": "E07",
+    "status": "PASS",
+    "testFile": "tests/recovery/store.test.ts",
+    "testName": "E06 E07 fault afterCommit"
+  },
+  {
+    "id": "E08",
+    "status": "PASS",
+    "testFile": "tests/recovery/store.test.ts",
+    "testName": "E08 stale"
+  },
+  {
+    "id": "E09",
+    "status": "PASS",
+    "testFile": "tests/recovery/store.test.ts",
+    "testName": "E09 wrong"
+  },
+  {
+    "id": "E10",
+    "status": "PASS",
+    "testFile": "tests/recovery/process.test.ts",
+    "testName": "E02 E03 E04 E05 E10 F02"
+  },
+  {
+    "id": "F01",
+    "status": "PASS",
+    "testFile": "tests/e2e/cli.test.ts",
+    "testName": "A03 F01 F03"
+  },
+  {
+    "id": "F02",
+    "status": "PASS",
+    "testFile": "tests/recovery/process.test.ts",
+    "testName": "E02 E03 E04 E05 E10 F02"
+  },
+  {
+    "id": "F03",
+    "status": "PASS",
+    "testFile": "tests/e2e/cli.test.ts",
+    "testName": "A03 F01 F03"
+  },
+  {
+    "id": "F04",
+    "status": "PASS",
+    "testFile": "tests/acceptance/engineering.test.ts",
+    "testName": "F04 verifier"
+  },
+  {
+    "id": "F05",
+    "status": "PASS",
+    "testFile": "tests/e2e/cli.test.ts",
+    "testName": "F05 real"
+  },
+  {
+    "id": "F06",
+    "status": "PASS",
+    "testFile": "tests/acceptance/engineering.test.ts",
+    "testName": "independent expected"
+  },
+  {
+    "id": "F07",
+    "status": "PASS",
+    "testFile": "tests/e2e/cli.test.ts",
+    "testName": "CLI create buy step"
+  },
+  {
+    "id": "F08",
+    "status": "PASS",
+    "testFile": "tests/e2e/cli.test.ts",
+    "testName": "CLI create buy step"
+  },
+  {
+    "id": "G01",
+    "status": "PASS",
+    "evidence": [
+      "docs/data/source-probes.md",
+      "docs/data/sources.md",
+      "docs/data/blockers.md"
+    ],
+    "note": "BaoStock 0.9.4 installed; actual source CSV and request evidence after 0.8.9 failed"
+  },
+  {
+    "id": "G02",
+    "status": "PASS",
+    "evidence": [
+      "docs/data/source-probes.md",
+      "docs/data/sources.md",
+      "docs/data/blockers.md"
+    ],
+    "note": "Five securities, 16 trading days, 3840 unadjusted five-minute bars; sh.600519 conflicts quarantined"
+  },
+  {
+    "id": "G03",
+    "status": "PASS",
+    "evidence": [
+      "docs/data/source-probes.md",
+      "docs/data/sources.md",
+      "docs/data/blockers.md"
+    ],
+    "note": "Historical universe 2020-01-02 (4306 rows including nonstocks); type=1 and IPO lifecycle checked for five selected stocks"
+  },
+  {
+    "id": "G04",
+    "status": "PASS",
+    "evidence": [
+      "docs/data/source-probes.md",
+      "docs/data/sources.md",
+      "docs/data/blockers.md"
+    ],
+    "note": "Two later-delisted candidates probed with verified basic records, minute and daily results retained; not used as invented exit events"
+  },
+  {
+    "id": "G05",
+    "status": "PASS",
+    "evidence": [
+      "docs/data/source-probes.md",
+      "docs/data/sources.md",
+      "docs/data/blockers.md"
+    ],
+    "note": "BaoStock end labels, price/share/amount units normalized and actual raw sample validated; other adapters not claimed"
+  },
+  {
+    "id": "G06",
+    "status": "BLOCKED",
+    "evidence": [
+      "docs/data/source-probes.md",
+      "docs/data/sources.md",
+      "docs/data/blockers.md"
+    ],
+    "note": "Seven dividend source rows mapped; missing/duplicate candidate retained; implementation announcement verification incomplete, no production action package"
+  },
+  {
+    "id": "G07",
+    "status": "PASS",
+    "evidence": [
+      "docs/data/source-probes.md",
+      "docs/data/sources.md",
+      "docs/data/blockers.md"
+    ],
+    "note": "Raw SHA-256, daily volume/HLC checks, missing/suspension policy and rejected Maotai precision conflicts demonstrated"
+  },
+  {
+    "id": "G08",
+    "status": "PASS",
+    "evidence": [
+      "docs/data/source-probes.md",
+      "docs/data/sources.md",
+      "docs/data/blockers.md"
+    ],
+    "note": "Per-request and whole-batch cache actually reused; EMPTY factor responses retained as EMPTY, bounded errors/retries recorded"
+  },
+  {
+    "id": "G09",
+    "status": "PASS",
+    "evidence": [
+      "docs/data/source-probes.md",
+      "docs/data/sources.md",
+      "docs/data/blockers.md"
+    ],
+    "note": "Real five-security package loaded through same API and SQLite demo, marketDataKind real and rulesetKind game-test"
+  },
+  {
+    "id": "G10",
+    "status": "PASS",
+    "evidence": [
+      "docs/data/source-probes.md",
+      "docs/data/sources.md",
+      "docs/data/blockers.md"
+    ],
+    "note": "SDK versions, real coverage, source limits, use/redistribution UNCONFIRMED and ignores recorded"
+  }
+]

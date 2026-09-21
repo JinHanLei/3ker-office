@@ -1,11 +1,119 @@
-import {it,expect} from 'vitest';
-import {mkdtempSync} from 'node:fs';import {tmpdir} from 'node:os';import {join} from 'node:path';
-import {GameKernel} from '../../packages/game-core/src/index.js';
-import {MemoryRunStore,SqliteRunStore,loadScenario,type FaultPhase} from '../../packages/kernel-adapters/src/index.js';
-const file=()=>join(mkdtempSync(join(tmpdir(),'3ker-store-')),'run.sqlite');
-const data=()=>loadScenario('scenarios/synthetic/edge-cases');
-const cmd={type:'CreateAccount' as const,runId:'r',commandId:'c',actorId:'p',accountId:'a',initialCashFen:'10000000'};
-for(const type of ['memory','sqlite'])it(`E01 RunStore contract ${type}`,async()=>{const store=type==='memory'?new MemoryRunStore():new SqliteRunStore(file());const k=await GameKernel.create({runId:'r',ownerActorId:'p'},data(),store);expect(await store.load('absent')).toBeNull();await k.execute(cmd);const loaded=(await store.load('r'))!;expect(loaded.accounts.a!.availableCashFen).toBe(10000000n);loaded.accounts.a!.availableCashFen=0n;expect((await store.load('r'))!.accounts.a!.availableCashFen).toBe(10000000n);await expect(store.commit(loaded,0)).rejects.toMatchObject({code:'STATE_VERSION_CONFLICT'});await k.close();});
-for(const phase of ['beforeTransaction','afterRows','afterCommit'] as FaultPhase[])it(`E06 E07 fault ${phase} preserves atomicity and receipts`,async()=>{let armed=false;const path=file(),store=new SqliteRunStore(path,p=>{if(armed&&p===phase){armed=false;throw Error('injected');}});const k=await GameKernel.create({runId:'r',ownerActorId:'p'},data(),store);armed=true;await expect(k.execute(cmd)).rejects.toThrow('injected');await k.close();const resumed=await GameKernel.resume('r',data(),new SqliteRunStore(path));const before=resumed.exportSnapshot('p');expect(Object.keys(before.accounts).length).toBe(phase==='afterCommit'?1:0);const receipt=await resumed.execute(cmd);expect(receipt.ok).toBe(true);expect(resumed.exportSnapshot('p').accounts.a!.availableCashFen).toBe(10000000n);expect(await resumed.execute(cmd)).toEqual(receipt);await resumed.close();});
-it('E08 stale writers cannot overwrite',async()=>{const path=file();const a=await GameKernel.create({runId:'r',ownerActorId:'p'},data(),new SqliteRunStore(path));const b=await GameKernel.resume('r',data(),new SqliteRunStore(path));await a.execute(cmd);await expect(b.execute({...cmd,commandId:'other'})).rejects.toMatchObject({code:'STATE_VERSION_CONFLICT'});expect(b.exportSnapshot('p').accounts.a!.availableCashFen).toBe(10000000n);await a.close();await b.close();});
-it('E09 wrong scenario rule and save versions fail loudly',async()=>{const store=new MemoryRunStore();const k=await GameKernel.create({runId:'r',ownerActorId:'p'},data(),store);const d=data();d.hash='wrong';await expect(GameKernel.resume('r',d,store)).rejects.toMatchObject({code:'SCENARIO_VERSION_MISMATCH'});const s=k.exportSnapshot('p');s.saveSchemaVersion=99;s.stateVersion++;await store.commit(s,0);await expect(GameKernel.resume('r',data(),store)).rejects.toMatchObject({code:'SAVE_VERSION_UNSUPPORTED'});});
+import { it, expect } from "vitest";
+import { mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { GameKernel } from "../../packages/game-core/src/index.js";
+import {
+  MemoryRunStore,
+  SqliteRunStore,
+  loadScenario,
+  type FaultPhase,
+} from "../../packages/kernel-adapters/src/index.js";
+const file = () =>
+  join(mkdtempSync(join(tmpdir(), "3ker-store-")), "run.sqlite");
+const data = () => loadScenario("scenarios/synthetic/edge-cases");
+const cmd = {
+  type: "CreateAccount" as const,
+  runId: "r",
+  commandId: "c",
+  actorId: "p",
+  accountId: "a",
+  initialCashFen: "10000000",
+};
+for (const type of ["memory", "sqlite"])
+  it(`E01 RunStore contract ${type}`, async () => {
+    const store =
+      type === "memory" ? new MemoryRunStore() : new SqliteRunStore(file());
+    const k = await GameKernel.create(
+      { runId: "r", ownerActorId: "p" },
+      data(),
+      store,
+    );
+    expect(await store.load("absent")).toBeNull();
+    await k.execute(cmd);
+    const loaded = (await store.load("r"))!;
+    expect(loaded.accounts.a!.availableCashFen).toBe(10000000n);
+    loaded.accounts.a!.availableCashFen = 0n;
+    expect((await store.load("r"))!.accounts.a!.availableCashFen).toBe(
+      10000000n,
+    );
+    await expect(store.commit(loaded, 0)).rejects.toMatchObject({
+      code: "STATE_VERSION_CONFLICT",
+    });
+    await k.close();
+  });
+for (const phase of [
+  "beforeTransaction",
+  "afterRows",
+  "afterCommit",
+] as FaultPhase[])
+  it(`E06 E07 fault ${phase} preserves atomicity and receipts`, async () => {
+    let armed = false;
+    const path = file(),
+      store = new SqliteRunStore(path, (p) => {
+        if (armed && p === phase) {
+          armed = false;
+          throw Error("injected");
+        }
+      });
+    const k = await GameKernel.create(
+      { runId: "r", ownerActorId: "p" },
+      data(),
+      store,
+    );
+    armed = true;
+    await expect(k.execute(cmd)).rejects.toThrow("injected");
+    await k.close();
+    const resumed = await GameKernel.resume(
+      "r",
+      data(),
+      new SqliteRunStore(path),
+    );
+    const before = resumed.exportSnapshot("p");
+    expect(Object.keys(before.accounts).length).toBe(
+      phase === "afterCommit" ? 1 : 0,
+    );
+    const receipt = await resumed.execute(cmd);
+    expect(receipt.ok).toBe(true);
+    expect(resumed.exportSnapshot("p").accounts.a!.availableCashFen).toBe(
+      10000000n,
+    );
+    expect(await resumed.execute(cmd)).toEqual(receipt);
+    await resumed.close();
+  });
+it("E08 stale writers cannot overwrite", async () => {
+  const path = file();
+  const a = await GameKernel.create(
+    { runId: "r", ownerActorId: "p" },
+    data(),
+    new SqliteRunStore(path),
+  );
+  const b = await GameKernel.resume("r", data(), new SqliteRunStore(path));
+  await a.execute(cmd);
+  await expect(b.execute({ ...cmd, commandId: "other" })).rejects.toMatchObject(
+    { code: "STATE_VERSION_CONFLICT" },
+  );
+  expect(b.exportSnapshot("p").accounts.a!.availableCashFen).toBe(10000000n);
+  await a.close();
+  await b.close();
+});
+it("E09 wrong scenario rule and save versions fail loudly", async () => {
+  const store = new MemoryRunStore();
+  const k = await GameKernel.create(
+    { runId: "r", ownerActorId: "p" },
+    data(),
+    store,
+  );
+  const d = data();
+  d.hash = "wrong";
+  await expect(GameKernel.resume("r", d, store)).rejects.toMatchObject({
+    code: "SCENARIO_VERSION_MISMATCH",
+  });
+  const s = k.exportSnapshot("p");
+  s.saveSchemaVersion = 99;
+  s.stateVersion++;
+  await store.commit(s, 0);
+  await expect(GameKernel.resume("r", data(), store)).rejects.toMatchObject({
+    code: "SAVE_VERSION_UNSUPPORTED",
+  });
+});

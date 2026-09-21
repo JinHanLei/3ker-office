@@ -1,0 +1,7 @@
+KERNEL_BUILD_TASK.md
+.runtime
+.venv-data
+node_modules
+dist
+pnpm-lock.yaml
+scenarios

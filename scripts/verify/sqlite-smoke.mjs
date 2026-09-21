@@ -1,11 +1,18 @@
-import Database from '../../packages/kernel-adapters/node_modules/better-sqlite3/lib/index.js';
-import {mkdtempSync} from 'node:fs';
-import {tmpdir} from 'node:os';
-import {join} from 'node:path';
-const path=join(mkdtempSync(join(tmpdir(),'3ker-sqlite-')),'smoke.sqlite');
-let db=new Database(path);
-db.exec('CREATE TABLE smoke (value TEXT NOT NULL)');
-db.transaction(()=>db.prepare('INSERT INTO smoke VALUES (?)').run('900719925474099312345'))();
-db.close(); db=new Database(path);
-if(db.prepare('SELECT value FROM smoke').get().value!=='900719925474099312345')throw Error('SQLite reopen mismatch');
-db.close(); console.log('SQLite open / transaction / close / reopen: PASS');
+import Database from "../../packages/kernel-adapters/node_modules/better-sqlite3/lib/index.js";
+import { mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+const path = join(mkdtempSync(join(tmpdir(), "3ker-sqlite-")), "smoke.sqlite");
+let db = new Database(path);
+db.exec("CREATE TABLE smoke (value TEXT NOT NULL)");
+db.transaction(() =>
+  db.prepare("INSERT INTO smoke VALUES (?)").run("900719925474099312345"),
+)();
+db.close();
+db = new Database(path);
+if (
+  db.prepare("SELECT value FROM smoke").get().value !== "900719925474099312345"
+)
+  throw Error("SQLite reopen mismatch");
+db.close();
+console.log("SQLite open / transaction / close / reopen: PASS");

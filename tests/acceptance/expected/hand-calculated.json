@@ -1,0 +1,7 @@
+{
+  "source": "Independently specified in KERNEL_BUILD_TASK.md section 13; synthetic test policies",
+  "trade": {"initialCashFen":"10000000","buyAmountFen":"100000","buyCommissionFen":"500","afterBuyCashFen":"9899500","sellAmountFen":"110000","sellCommissionFen":"500","sellStampFen":"110","finalCashFen":"10008890","realizedPnlFen":"8890"},
+  "partial": {"totalQuantity":"200","turnoverFen":"200000","commissionFen":"500"},
+  "dividend": {"shares":"1000","beforeValueFen":"1000000","exValueFen":"950000","receivableFen":"50000"},
+  "shares": {"beforeQuantity":"1000","afterQuantity":"2000","costConserved":true}
+}

@@ -1,2 +1,2 @@
-export * from './foundation/index.js';
-export * from './application/kernel/index.js';
+export * from "./foundation/index.js";
+export * from "./application/kernel/index.js";

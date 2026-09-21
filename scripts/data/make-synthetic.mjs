@@ -1,19 +1,202 @@
-import {mkdirSync,writeFileSync} from 'node:fs';
-const dates=['2020-01-02','2020-01-03','2020-01-06','2020-01-07'];
-const at=(d,t)=>`${d}T${t}:00+08:00`;
-for(const name of ['kernel-smoke','corporate-actions','edge-cases']){
- const dir=`scenarios/synthetic/${name}`;mkdirSync(dir,{recursive:true});const write=(n,v)=>writeFileSync(`${dir}/${n}.json`,JSON.stringify(v,null,2)+'\n');
- const start=at(dates[0],'09:00'),end=at(dates[3],'15:00');
- const calendar=dates.map(date=>({date,sessions:[{open:at(date,'09:30'),close:at(date,'11:30')},{open:at(date,'13:00'),close:at(date,'15:00')}]}));
- const securities=[{securityId:'TEST_A',board:'TEST',listedAt:start},{securityId:'TEST_B',board:'TEST',listedAt:at(dates[2],'09:30')},{securityId:'TEST_EXIT',board:'TEST',listedAt:start,lastTradableAt:at(dates[2],'15:00'),delistedAt:at(dates[3],'09:00'),exitKnownAt:at(dates[2],'14:00')}];
- const rule={id:'synthetic-basic',from:start,to:'2021-01-01T00:00:00+08:00',board:'TEST',priceTickUnits:'100',quantityStep:'100',minimumBuyQuantity:'100',oddLotSellPolicy:'all-remainder',sellableDelayTradingDays:1,commissionNumerator:'3',commissionDenominator:'10000',minimumCommissionFen:'500',stampNumerator:'1',stampDenominator:'1000',capacityNumerator:'1',capacityDenominator:'20',requiredPermission:'TEST',boardAvailableAt:start};
- const bars=[];for(const d of calendar)for(const s of d.sessions)for(let t=Date.parse(s.open);t<Date.parse(s.close);t+=300000)for(const sec of securities){if(t<Date.parse(sec.listedAt)||(sec.lastTradableAt&&t>=Date.parse(sec.lastTradableAt))||(sec.securityId==='TEST_EXIT'&&d.date===dates[1]))continue;
- const p=d.date<dates[2]?100000:(name==='corporate-actions'?95000:110000);const volume=sec.securityId==='TEST_A'&&t<Date.parse(at(d.date,'09:40'))?2000:20000;
- bars.push({securityId:sec.securityId,barStart:new Date(t).toISOString(),barEnd:new Date(t+300000).toISOString(),availableAt:new Date(t+300000).toISOString(),openUnits:String(p),highUnits:String(p+1000),lowUnits:String(p-1000),closeUnits:String(p),volume:String(volume),amountFen:String(p*volume/100),upperUnits:'200000',lowerUnits:'10000'});
- }
- write('manifest',{scenarioId:name,scenarioVersion:'1',synthetic:true,marketDataKind:'synthetic',rulesetKind:'game-test',ruleVersion:'synthetic-basic-v1',start,end,coverageStatus:'COMPLETE',gaps:[],source:'hand-authored synthetic fixture',usage:'game tests only',redistribution:'project-authored synthetic'});
- write('calendar',calendar);write('securities',securities);write('names',securities.flatMap(s=>s.securityId==='TEST_A'?[{securityId:s.securityId,code:'TEST_A',name:'测试甲',from:start,to:at(dates[2],'09:00'),knownAt:start},{securityId:s.securityId,code:'TEST_A2',name:'测试甲新名',from:at(dates[2],'09:00'),to:'2021-01-01T00:00:00+08:00',knownAt:at(dates[2],'09:00')}]:[{securityId:s.securityId,code:s.securityId,name:s.securityId,from:s.listedAt,to:'2021-01-01T00:00:00+08:00',knownAt:s.listedAt}]));write('bars-5m',bars);
- write('trading-status',[{securityId:'TEST_EXIT',from:at(dates[1],'00:00'),to:at(dates[2],'00:00'),status:'SUSPENDED'}]);
- write('corporate-actions',[{actionId:'DIV_A',securityId:'TEST_A',type:'DIVIDEND',knownAt:start,recordAt:at(dates[1],'15:00'),effectiveAt:at(dates[2],'09:30'),payAt:at(dates[3],'09:30'),cashNumerator:'50',cashDenominator:'1'},...(name==='edge-cases'?[{actionId:'SHARES_A',securityId:'TEST_A',type:'SHARES',knownAt:start,recordAt:at(dates[1],'15:00'),effectiveAt:at(dates[2],'09:30'),releaseAt:at(dates[3],'09:30'),shareNumerator:'1',shareDenominator:'1',fractionPolicy:'reject'}]:[]),{actionId:'EXIT',securityId:'TEST_EXIT',type:'EXIT',knownAt:at(dates[2],'14:00'),recordAt:at(dates[2],'15:00'),effectiveAt:at(dates[3],'09:00'),exitPolicy:'game-writeoff-v1'}]);write('rules',[rule]);write('provenance',{source:'synthetic generator',sdkVersion:'none',rawHashes:{},notes:['NOT REAL MARKET DATA']});write('coverage-report',{status:'COMPLETE',notes:['Synthetic calendar, prices, lifecycle and policies']});
- if(name==='kernel-smoke'){mkdirSync('rules',{recursive:true});writeFileSync('rules/synthetic-basic-v1.json',JSON.stringify(rule,null,2)+'\n');}
+import { mkdirSync, writeFileSync } from "node:fs";
+const dates = ["2020-01-02", "2020-01-03", "2020-01-06", "2020-01-07"];
+const at = (d, t) => `${d}T${t}:00+08:00`;
+for (const name of ["kernel-smoke", "corporate-actions", "edge-cases"]) {
+  const dir = `scenarios/synthetic/${name}`;
+  mkdirSync(dir, { recursive: true });
+  const write = (n, v) =>
+    writeFileSync(`${dir}/${n}.json`, JSON.stringify(v, null, 2) + "\n");
+  const start = at(dates[0], "09:00"),
+    end = at(dates[3], "15:00");
+  const calendar = dates.map((date) => ({
+    date,
+    sessions: [
+      { open: at(date, "09:30"), close: at(date, "11:30") },
+      { open: at(date, "13:00"), close: at(date, "15:00") },
+    ],
+  }));
+  const securities = [
+    { securityId: "TEST_A", board: "TEST", listedAt: start },
+    { securityId: "TEST_B", board: "TEST", listedAt: at(dates[2], "09:30") },
+    {
+      securityId: "TEST_EXIT",
+      board: "TEST",
+      listedAt: start,
+      lastTradableAt: at(dates[2], "15:00"),
+      delistedAt: at(dates[3], "09:00"),
+      exitKnownAt: at(dates[2], "14:00"),
+    },
+  ];
+  const rule = {
+    id: "synthetic-basic",
+    from: start,
+    to: "2021-01-01T00:00:00+08:00",
+    board: "TEST",
+    priceTickUnits: "100",
+    quantityStep: "100",
+    minimumBuyQuantity: "100",
+    oddLotSellPolicy: "all-remainder",
+    sellableDelayTradingDays: 1,
+    commissionNumerator: "3",
+    commissionDenominator: "10000",
+    minimumCommissionFen: "500",
+    stampNumerator: "1",
+    stampDenominator: "1000",
+    capacityNumerator: "1",
+    capacityDenominator: "20",
+    requiredPermission: "TEST",
+    boardAvailableAt: start,
+  };
+  const bars = [];
+  for (const d of calendar)
+    for (const s of d.sessions)
+      for (let t = Date.parse(s.open); t < Date.parse(s.close); t += 300000)
+        for (const sec of securities) {
+          if (
+            t < Date.parse(sec.listedAt) ||
+            (sec.lastTradableAt && t >= Date.parse(sec.lastTradableAt)) ||
+            (sec.securityId === "TEST_EXIT" && d.date === dates[1])
+          )
+            continue;
+          const p =
+            d.date < dates[2]
+              ? 100000
+              : name === "corporate-actions"
+                ? 95000
+                : 110000;
+          const volume =
+            sec.securityId === "TEST_A" && t < Date.parse(at(d.date, "09:40"))
+              ? 2000
+              : 20000;
+          bars.push({
+            securityId: sec.securityId,
+            barStart: new Date(t).toISOString(),
+            barEnd: new Date(t + 300000).toISOString(),
+            availableAt: new Date(t + 300000).toISOString(),
+            openUnits: String(p),
+            highUnits: String(p + 1000),
+            lowUnits: String(p - 1000),
+            closeUnits: String(p),
+            volume: String(volume),
+            amountFen: String((p * volume) / 100),
+            upperUnits: "200000",
+            lowerUnits: "10000",
+          });
+        }
+  write("manifest", {
+    scenarioId: name,
+    scenarioVersion: "1",
+    synthetic: true,
+    marketDataKind: "synthetic",
+    rulesetKind: "game-test",
+    ruleVersion: "synthetic-basic-v1",
+    start,
+    end,
+    coverageStatus: "COMPLETE",
+    gaps: [],
+    source: "hand-authored synthetic fixture",
+    usage: "game tests only",
+    redistribution: "project-authored synthetic",
+  });
+  write("calendar", calendar);
+  write("securities", securities);
+  write(
+    "names",
+    securities.flatMap((s) =>
+      s.securityId === "TEST_A"
+        ? [
+            {
+              securityId: s.securityId,
+              code: "TEST_A",
+              name: "测试甲",
+              from: start,
+              to: at(dates[2], "09:00"),
+              knownAt: start,
+            },
+            {
+              securityId: s.securityId,
+              code: "TEST_A2",
+              name: "测试甲新名",
+              from: at(dates[2], "09:00"),
+              to: "2021-01-01T00:00:00+08:00",
+              knownAt: at(dates[2], "09:00"),
+            },
+          ]
+        : [
+            {
+              securityId: s.securityId,
+              code: s.securityId,
+              name: s.securityId,
+              from: s.listedAt,
+              to: "2021-01-01T00:00:00+08:00",
+              knownAt: s.listedAt,
+            },
+          ],
+    ),
+  );
+  write("bars-5m", bars);
+  write("trading-status", [
+    {
+      securityId: "TEST_EXIT",
+      from: at(dates[1], "00:00"),
+      to: at(dates[2], "00:00"),
+      status: "SUSPENDED",
+    },
+  ]);
+  write("corporate-actions", [
+    {
+      actionId: "DIV_A",
+      securityId: "TEST_A",
+      type: "DIVIDEND",
+      knownAt: start,
+      recordAt: at(dates[1], "15:00"),
+      effectiveAt: at(dates[2], "09:30"),
+      payAt: at(dates[3], "09:30"),
+      cashNumerator: "50",
+      cashDenominator: "1",
+    },
+    ...(name === "edge-cases"
+      ? [
+          {
+            actionId: "SHARES_A",
+            securityId: "TEST_A",
+            type: "SHARES",
+            knownAt: start,
+            recordAt: at(dates[1], "15:00"),
+            effectiveAt: at(dates[2], "09:30"),
+            releaseAt: at(dates[3], "09:30"),
+            shareNumerator: "1",
+            shareDenominator: "1",
+            fractionPolicy: "reject",
+          },
+        ]
+      : []),
+    {
+      actionId: "EXIT",
+      securityId: "TEST_EXIT",
+      type: "EXIT",
+      knownAt: at(dates[2], "14:00"),
+      recordAt: at(dates[2], "15:00"),
+      effectiveAt: at(dates[3], "09:00"),
+      exitPolicy: "game-writeoff-v1",
+    },
+  ]);
+  write("rules", [rule]);
+  write("provenance", {
+    source: "synthetic generator",
+    sdkVersion: "none",
+    rawHashes: {},
+    notes: ["NOT REAL MARKET DATA"],
+  });
+  write("coverage-report", {
+    status: "COMPLETE",
+    notes: ["Synthetic calendar, prices, lifecycle and policies"],
+  });
+  if (name === "kernel-smoke") {
+    mkdirSync("rules", { recursive: true });
+    writeFileSync(
+      "rules/synthetic-basic-v1.json",
+      JSON.stringify(rule, null, 2) + "\n",
+    );
+  }
 }
