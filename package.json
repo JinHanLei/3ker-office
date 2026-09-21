@@ -1,0 +1,30 @@
+{
+  "name": "3ker-office", "version": "0.1.0", "private": true,
+  "type": "module", "packageManager": "pnpm@10.9.0",
+  "engines": {"node": ">=24 <25"},
+  "scripts": {
+    "typecheck": "tsc -b --pretty false",
+    "build": "tsc -b --pretty false",
+    "lint": "node scripts/architecture/check.mjs",
+    "test:unit": "vitest run packages scripts/data/__tests__",
+    "test:integration": "vitest run tests/integration tests/properties",
+    "test:recovery": "vitest run tests/recovery",
+    "test:acceptance": "vitest run tests/acceptance tests/e2e",
+    "verify": "node scripts/verify/run.mjs",
+    "cli": "node apps/headless/dist/main.js",
+    "demo:headless": "node apps/headless/dist/demos/headless.js",
+    "demo:recovery": "node apps/headless/dist/demos/recovery.js",
+    "demo:real-data": "node apps/headless/dist/demos/real-data.js",
+    "data:probe": "tsx scripts/data/probe-sources.ts",
+    "data:fetch": "tsx scripts/data/probe-sources.ts",
+    "data:normalize": "tsx scripts/data/build-scenario.ts normalize",
+    "data:validate": "tsx scripts/data/build-scenario.ts validate",
+    "data:publish": "tsx scripts/data/build-scenario.ts publish",
+    "verify:data": "tsx scripts/data/build-scenario.ts verify"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3", "vitest": "3.2.4", "tsx": "4.20.6",
+    "@types/node": "24.10.1", "@types/better-sqlite3": "7.6.13"
+  },
+  "pnpm": { "onlyBuiltDependencies": ["better-sqlite3", "esbuild"] }
+}

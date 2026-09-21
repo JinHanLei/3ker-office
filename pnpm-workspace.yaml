@@ -1,0 +1,5 @@
+packages:
+  - apps/headless
+  - packages/contracts
+  - packages/game-core
+  - packages/kernel-adapters
