@@ -8,6 +8,7 @@ import {assertInvariants} from '../../features/settlement/index.js';
 import {submitOrder,cancelOrder} from '../../features/orders/index.js';
 import {schedule} from '../../features/scheduler/index.js';
 import {processBatch} from '../event-processing/index.js';
+import {valuation} from '../../features/valuation/index.js';
 export class GameKernel {
  private tail:Promise<unknown>=Promise.resolve();
  private constructor(private state:RunState,private readonly data:HistoricalData,private readonly store:RunStore){}
@@ -43,7 +44,7 @@ export class GameKernel {
    default:throw new KernelError('INVALID_ORDER');
   }
  }
- query(q:GameQuery):unknown {const s=this.state;if(q.type==='status')return {runId:s.runId,gameTime:s.gameTime,status:s.status,eventSeq:s.eventSeq,marketDataKind:this.data.pack.manifest.marketDataKind,rulesetKind:this.data.pack.manifest.rulesetKind};if(q.type==='search')return clone(searchable(this.data.pack,s.gameTime,q.text));if(q.type==='bars')return clone(this.data.pack.bars.filter(b=>b.securityId===q.securityId&&ms(b.availableAt)<=s.gameTime));const a=s.accounts[q.accountId];if(!a)throw new KernelError('ACCOUNT_NOT_FOUND');if(a.actorId!==q.actorId)throw new KernelError('NOT_OWNER');return clone(q.type==='account'?a:q.type==='positions'?a.lots:q.type==='watchlist'?a.watchlist:q.type==='ledger'?s.ledger.filter(l=>l.accountId===a.accountId):s.orders.filter(o=>o.accountId===a.accountId));}
+ query(q:GameQuery):unknown {const s=this.state;if(q.type==='status')return {runId:s.runId,gameTime:s.gameTime,status:s.status,eventSeq:s.eventSeq,marketDataKind:this.data.pack.manifest.marketDataKind,rulesetKind:this.data.pack.manifest.rulesetKind};if(q.type==='search')return clone(searchable(this.data.pack,s.gameTime,q.text));if(q.type==='bars')return clone(this.data.pack.bars.filter(b=>b.securityId===q.securityId&&ms(b.availableAt)<=s.gameTime));const a=s.accounts[q.accountId];if(!a)throw new KernelError('ACCOUNT_NOT_FOUND');if(a.actorId!==q.actorId)throw new KernelError('NOT_OWNER');return clone(q.type==='account'?{...a,valuation:valuation(s,a)}:q.type==='positions'?a.lots:q.type==='watchlist'?a.watchlist:q.type==='ledger'?s.ledger.filter(l=>l.accountId===a.accountId):s.orders.filter(o=>o.accountId===a.accountId));}
  exportSnapshot(actorId:string):RunState {if(actorId!==this.state.ownerActorId)throw new KernelError('NOT_OWNER');return clone(this.state);}
  advanceTo(target:number|string):Promise<{ok:boolean;gameTime:number;code?:string}>{return this.serial(()=>this.advance(typeof target==='string'?ms(target):target));}
  stepNextEvent():Promise<{ok:boolean;gameTime:number;code?:string}>{return this.serial(()=>this.advance(schedule(this.data.pack).find(t=>t>this.state.gameTime)??ms(this.data.pack.manifest.end)));}
